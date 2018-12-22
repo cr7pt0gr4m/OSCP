@@ -1,0 +1,4 @@
+<strong>Nmap</strong></p><p>Quick TCP Scan</p><div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap -sC -sV -vv -oA quick 10.10.10.10
+</code></pre></div></div><p>Quick UDP Scan</p><div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap -sU -sV -vv -oA quick_udp 10.10.10.10
+</code></pre></div></div><p>Full TCP Scan</p><div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap -sC -sV -p- -vv -oA full 10.10.10.10
+</code></pre></div></div><p>Port knock</p><div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in 7000 8000 9000; do nmap -Pn --host_timeout 201 --max-retries 0 -p $x 10.10.10.10; done
