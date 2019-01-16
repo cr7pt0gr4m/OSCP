@@ -48,7 +48,7 @@ struct msghdr msg;
 struct iovec iovector;
 int sz = 64*1024;
 
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
         char sysfspath[SHORT_STRING];
         char subsystem[SHORT_STRING];
         char event[SHORT_STRING];
